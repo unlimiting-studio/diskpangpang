@@ -60,6 +60,14 @@ final class ScannerViewModel {
         }
     }
 
+    func loadCache() {
+        let path = selectedVolume.path
+        if let cached = ScanCache.load(volumePath: path) {
+            rootNode = cached
+            state = .completed
+        }
+    }
+
     func startScan() {
         scanTask?.cancel()
         state = .scanning(progress: ScanProgress(scannedCount: 0, currentPath: "", scannedSize: 0, estimatedTotalSize: 0))
@@ -75,6 +83,10 @@ final class ScannerViewModel {
                     weakSelf?.state = .scanning(progress: progress)
                 }
             }
+
+            // Cache in background
+            let volumePath = url.path
+            ScanCache.save(root: result, volumePath: volumePath)
 
             DispatchQueue.main.async {
                 guard !Task.isCancelled else { return }

@@ -1,6 +1,5 @@
 import Foundation
 
-@Observable
 final class FileNode: Identifiable, @unchecked Sendable {
     let id: UUID
     let name: String
@@ -67,8 +66,11 @@ final class FileNode: Identifiable, @unchecked Sendable {
         return components
     }
 
+    private var _dominantCategory: FileCategory?
+
     var dominantCategory: FileCategory {
         if !isDirectory { return category }
+        if let cached = _dominantCategory { return cached }
         guard !children.isEmpty else { return .other }
 
         var categorySizes: [FileCategory: UInt64] = [:]
@@ -76,7 +78,9 @@ final class FileNode: Identifiable, @unchecked Sendable {
             let cat = child.isDirectory ? child.dominantCategory : child.category
             categorySizes[cat, default: 0] += child.totalSize
         }
-        return categorySizes.max(by: { $0.value < $1.value })?.key ?? .other
+        let result = categorySizes.max(by: { $0.value < $1.value })?.key ?? .other
+        _dominantCategory = result
+        return result
     }
 }
 

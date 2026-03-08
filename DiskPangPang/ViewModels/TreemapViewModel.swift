@@ -12,38 +12,43 @@ final class TreemapViewModel {
         zoomStack.last
     }
 
-    var displayChildren: [FileNode] {
-        guard let current = currentNode else { return [] }
-        return current.sortedChildren().filter { $0.totalSize > 0 }
+    private let maxDisplayItems = 150
+    private(set) var displayChildren: [FileNode] = []
+
+    private func updateDisplayChildren() {
+        guard let current = currentNode else {
+            displayChildren = []
+            return
+        }
+        let all = current.sortedChildren().filter { $0.totalSize > 0 }
+        displayChildren = all.count <= maxDisplayItems ? all : Array(all.prefix(maxDisplayItems))
     }
 
     func setRoot(_ node: FileNode) {
         zoomStack = [node]
         hoveredNode = nil
+        updateDisplayChildren()
     }
 
     func zoomIn(to node: FileNode) {
         guard node.isDirectory, !node.children.isEmpty else { return }
-        withAnimation(.spring(duration: 0.4, bounce: 0.15)) {
-            zoomStack.append(node)
-            hoveredNode = nil
-        }
+        zoomStack.append(node)
+        hoveredNode = nil
+        updateDisplayChildren()
     }
 
     func zoomOut(to node: FileNode) {
         guard let index = zoomStack.firstIndex(of: node) else { return }
-        withAnimation(.spring(duration: 0.4, bounce: 0.15)) {
-            zoomStack = Array(zoomStack.prefix(through: index))
-            hoveredNode = nil
-        }
+        zoomStack = Array(zoomStack.prefix(through: index))
+        hoveredNode = nil
+        updateDisplayChildren()
     }
 
     func goUp() {
         guard zoomStack.count > 1 else { return }
-        withAnimation(.spring(duration: 0.4, bounce: 0.15)) {
-            zoomStack.removeLast()
-            hoveredNode = nil
-        }
+        zoomStack.removeLast()
+        hoveredNode = nil
+        updateDisplayChildren()
     }
 
     var breadcrumbs: [FileNode] {

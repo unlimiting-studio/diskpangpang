@@ -23,6 +23,12 @@ struct ContentView: View {
         .sheet(isPresented: Bindable(appState.collectorVM).showDeleteConfirmation) {
             DeleteConfirmationView(viewModel: appState.collectorVM)
         }
+        .sheet(isPresented: Bindable(appState.collectorVM).showLicenseGate) {
+            LicenseGateView {
+                appState.collectorVM.showLicenseGate = false
+                appState.collectorVM.showDeleteConfirmation = true
+            }
+        }
         .alert("삭제 결과", isPresented: Bindable(appState.collectorVM).showResult) {
             Button("확인", role: .cancel) {}
         } message: {

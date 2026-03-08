@@ -6,6 +6,7 @@ import SwiftUI
 final class CollectorViewModel {
     var items: [CollectorItem] = []
     var showDeleteConfirmation = false
+    var showLicenseGate = false
     var isDeleting = false
     var lastResult: DeletionResult?
     var showResult = false
@@ -58,7 +59,11 @@ final class CollectorViewModel {
     }
 
     func confirmDelete() {
-        showDeleteConfirmation = true
+        if LicenseService.shared.isActivated {
+            showDeleteConfirmation = true
+        } else {
+            showLicenseGate = true
+        }
     }
 
     func executeDelete() {

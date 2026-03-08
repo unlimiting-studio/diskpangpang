@@ -12,6 +12,10 @@ final class AppState {
 
     init() {
         checkPermissions()
+        scannerVM.loadCache()
+        if scannerVM.rootNode != nil {
+            onScanCompleted()
+        }
     }
 
     func checkPermissions() {

@@ -24,7 +24,6 @@ final class DiskScanner: Sendable {
         _isCancelled.withLock { $0 = true }
     }
 
-    /// Runs synchronously on the caller's thread — call from a background Task.
     func scan(
         url: URL,
         onProgress: @Sendable @escaping (ScanProgress) -> Void
@@ -39,50 +38,127 @@ final class DiskScanner: Sendable {
             isDirectory: true
         )
 
+        // Phase 1: Scan top-level directories in parallel
         let resourceKeys: Set<URLResourceKey> = [
-            .fileSizeKey,
-            .isDirectoryKey,
-            .isHiddenKey,
-            .isSymbolicLinkKey,
-            .totalFileAllocatedSizeKey
+            .fileSizeKey, .isDirectoryKey, .isHiddenKey,
+            .isSymbolicLinkKey, .totalFileAllocatedSizeKey
         ]
 
-        guard let enumerator = FileManager.default.enumerator(
-            at: url,
-            includingPropertiesForKeys: Array(resourceKeys),
-            options: [.skipsPackageDescendants]
-        ) else {
+        let topContents: [URL]
+        do {
+            topContents = try FileManager.default.contentsOfDirectory(
+                at: url,
+                includingPropertiesForKeys: Array(resourceKeys),
+                options: []
+            )
+        } catch {
             return root
         }
 
-        var nodeMap: [String: FileNode] = [url.path: root]
-        var scannedCount = 0
-        var scannedSize: UInt64 = 0
-
-        for case let fileURL as URL in enumerator {
+        // Create top-level nodes
+        var topDirs: [(FileNode, URL)] = []
+        for fileURL in topContents {
             if isCancelled { break }
+            guard let rv = try? fileURL.resourceValues(forKeys: resourceKeys) else { continue }
+            if rv.isSymbolicLink == true { continue }
 
-            guard let resourceValues = try? fileURL.resourceValues(forKeys: resourceKeys) else {
-                continue
-            }
-
-            if resourceValues.isSymbolicLink == true {
-                if resourceValues.isDirectory == true {
-                    enumerator.skipDescendants()
-                }
-                continue
-            }
-
-            let isDirectory = resourceValues.isDirectory ?? false
-            let isHidden = resourceValues.isHidden ?? false
-            let fileSize = UInt64(resourceValues.totalFileAllocatedSize ?? resourceValues.fileSize ?? 0)
+            let isDir = rv.isDirectory ?? false
+            let isHidden = rv.isHidden ?? false
+            let fileSize = UInt64(rv.totalFileAllocatedSize ?? rv.fileSize ?? 0)
 
             let node = FileNode(
                 name: fileURL.lastPathComponent,
                 url: fileURL,
-                isDirectory: isDirectory,
+                isDirectory: isDir,
                 isHidden: isHidden,
-                fileSize: isDirectory ? 0 : fileSize
+                fileSize: isDir ? 0 : fileSize
+            )
+            root.addChild(node)
+            if isDir {
+                topDirs.append((node, fileURL))
+            }
+        }
+
+        // Phase 2: Scan each top-level directory in parallel
+        let scannedSize = OSAllocatedUnfairLock(initialState: UInt64(0))
+        let scannedCount = OSAllocatedUnfairLock(initialState: 0)
+        let lastReportTime = OSAllocatedUnfairLock(initialState: CFAbsoluteTimeGetCurrent())
+
+        let group = DispatchGroup()
+        let concurrency = min(topDirs.count, 8)
+        let queue = DispatchQueue(label: "scanner", attributes: .concurrent)
+        let semaphore = DispatchSemaphore(value: concurrency)
+
+        for (dirNode, dirURL) in topDirs {
+            if isCancelled { break }
+            group.enter()
+            semaphore.wait()
+
+            queue.async { [self] in
+                defer {
+                    semaphore.signal()
+                    group.leave()
+                }
+
+                self.scanDirectory(
+                    dirNode: dirNode,
+                    dirURL: dirURL,
+                    resourceKeys: resourceKeys,
+                    scannedSize: scannedSize,
+                    scannedCount: scannedCount,
+                    estimatedTotalSize: estimatedTotalSize,
+                    lastReportTime: lastReportTime,
+                    onProgress: onProgress
+                )
+            }
+        }
+
+        group.wait()
+
+        // Rollup sizes
+        rollupSizes(node: root)
+        return root
+    }
+
+    private func scanDirectory(
+        dirNode: FileNode,
+        dirURL: URL,
+        resourceKeys: Set<URLResourceKey>,
+        scannedSize: OSAllocatedUnfairLock<UInt64>,
+        scannedCount: OSAllocatedUnfairLock<Int>,
+        estimatedTotalSize: UInt64,
+        lastReportTime: OSAllocatedUnfairLock<CFAbsoluteTime>,
+        onProgress: @Sendable @escaping (ScanProgress) -> Void
+    ) {
+        guard let enumerator = FileManager.default.enumerator(
+            at: dirURL,
+            includingPropertiesForKeys: Array(resourceKeys),
+            options: [.skipsPackageDescendants]
+        ) else { return }
+
+        var nodeMap: [String: FileNode] = [dirURL.path: dirNode]
+        var localCount = 0
+
+        for case let fileURL as URL in enumerator {
+            if isCancelled { break }
+
+            guard let rv = try? fileURL.resourceValues(forKeys: resourceKeys) else { continue }
+
+            if rv.isSymbolicLink == true {
+                if rv.isDirectory == true { enumerator.skipDescendants() }
+                continue
+            }
+
+            let isDir = rv.isDirectory ?? false
+            let isHidden = rv.isHidden ?? false
+            let fileSize = UInt64(rv.totalFileAllocatedSize ?? rv.fileSize ?? 0)
+
+            let node = FileNode(
+                name: fileURL.lastPathComponent,
+                url: fileURL,
+                isDirectory: isDir,
+                isHidden: isHidden,
+                fileSize: isDir ? 0 : fileSize
             )
 
             let parentPath = fileURL.deletingLastPathComponent().path
@@ -90,27 +166,45 @@ final class DiskScanner: Sendable {
                 parentNode.addChild(node)
             }
 
-            if isDirectory {
+            if isDir {
                 nodeMap[fileURL.path] = node
             } else {
-                scannedSize += fileSize
+                scannedSize.withLock { $0 += fileSize }
             }
 
-            scannedCount += 1
-            if scannedCount % 200 == 0 {
-                onProgress(ScanProgress(
-                    scannedCount: scannedCount,
-                    currentPath: fileURL.lastPathComponent,
-                    scannedSize: scannedSize,
-                    estimatedTotalSize: estimatedTotalSize
-                ))
-                // Yield to let MainActor process UI updates
-                Thread.sleep(forTimeInterval: 0.001)
+            localCount += 1
+            if localCount % 500 == 0 {
+                let batch = localCount
+                localCount = 0
+                let count = scannedCount.withLock { $0 += batch; return $0 }
+
+                // Throttle progress reports to max 10/sec
+                let now = CFAbsoluteTimeGetCurrent()
+                let shouldReport = lastReportTime.withLock { last -> Bool in
+                    if now - last >= 0.1 {
+                        last = now
+                        return true
+                    }
+                    return false
+                }
+
+                if shouldReport {
+                    let size = scannedSize.withLock { $0 }
+                    onProgress(ScanProgress(
+                        scannedCount: count,
+                        currentPath: fileURL.lastPathComponent,
+                        scannedSize: size,
+                        estimatedTotalSize: estimatedTotalSize
+                    ))
+                }
             }
         }
 
-        rollupSizes(node: root)
-        return root
+        // Flush remaining count
+        if localCount > 0 {
+            let remaining = localCount
+            scannedCount.withLock { $0 += remaining }
+        }
     }
 
     private static func estimateTotalSize(for url: URL) -> UInt64 {
@@ -125,12 +219,9 @@ final class DiskScanner: Sendable {
 
     private func rollupSizes(node: FileNode) {
         guard node.isDirectory else { return }
-
         var total: UInt64 = 0
         for child in node.children {
-            if child.isDirectory {
-                rollupSizes(node: child)
-            }
+            if child.isDirectory { rollupSizes(node: child) }
             total += child.totalSize
         }
         node.totalSize = total

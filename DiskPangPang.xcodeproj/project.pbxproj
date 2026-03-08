@@ -12,6 +12,7 @@
 		0E0E5AABE219149D75ABC5EA /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AAA7BAAB4883F5EC55A6003 /* AppState.swift */; };
 		1215A5DA1E0F8F2A6FB35490 /* TreemapLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B069B5D7723F380E854ECBE8 /* TreemapLayout.swift */; };
 		18A4D04EBD9E3F2C32570D9F /* CollectorItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBEB2544CBF7C7B2A82AC776 /* CollectorItem.swift */; };
+		1E6FD2D4DC86902D37703184 /* ScanCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411E8976FFAEB560F7D0A4C1 /* ScanCache.swift */; };
 		304E8BA2A9862EAB0DD916B5 /* TreemapTooltipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2645D62B1CD88C5FFAA18D77 /* TreemapTooltipView.swift */; };
 		35981B521E7AD40F56F51B81 /* LicenseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750EC2F437D8D24B59940B4A /* LicenseService.swift */; };
 		3700CEF8F5DC964419A492A0 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5359698240B4191691E24540 /* AppTheme.swift */; };
@@ -44,6 +45,7 @@
 		2A64CA3C0F817E3E889F91A5 /* DiskPangPang.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DiskPangPang.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D93C29A217B9CC529C9D83C /* BreadcrumbBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadcrumbBar.swift; sourceTree = "<group>"; };
 		34193531723EA53929F82F9A /* DiskScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskScanner.swift; sourceTree = "<group>"; };
+		411E8976FFAEB560F7D0A4C1 /* ScanCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanCache.swift; sourceTree = "<group>"; };
 		5359698240B4191691E24540 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
 		5B7A3A3830FD86D64D514402 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		5E2B546BFC738A438CBDAB74 /* ScanProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanProgressView.swift; sourceTree = "<group>"; };
@@ -183,6 +185,7 @@
 				34193531723EA53929F82F9A /* DiskScanner.swift */,
 				750EC2F437D8D24B59940B4A /* LicenseService.swift */,
 				EF2189E1A82A8CBBAF224BE0 /* PermissionService.swift */,
+				411E8976FFAEB560F7D0A4C1 /* ScanCache.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -305,6 +308,7 @@
 				D308882B7B9FD5D968BF32DD /* LicenseGateView.swift in Sources */,
 				35981B521E7AD40F56F51B81 /* LicenseService.swift in Sources */,
 				0BF6C53208985E534BB1B17F /* PermissionService.swift in Sources */,
+				1E6FD2D4DC86902D37703184 /* ScanCache.swift in Sources */,
 				635E33ED3153EBEBCA19DFD1 /* ScanProgressView.swift in Sources */,
 				B4B5F786328B6B527C3E4CAF /* ScannerViewModel.swift in Sources */,
 				A127F71CDE59A3BB0ADBE95E /* SizeLabel.swift in Sources */,
