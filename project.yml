@@ -1,0 +1,29 @@
+name: DiskPangPang
+options:
+  bundleIdPrefix: com.diskpangpang
+  deploymentTarget:
+    macOS: "14.0"
+  xcodeVersion: "16.0"
+  minimumXcodeGenVersion: "2.38.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MACOSX_DEPLOYMENT_TARGET: "14.0"
+
+targets:
+  DiskPangPang:
+    type: application
+    platform: macOS
+    sources:
+      - DiskPangPang
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.diskpangpang.app
+        INFOPLIST_FILE: DiskPangPang/Info.plist
+        CODE_SIGN_ENTITLEMENTS: DiskPangPang/DiskPangPang.entitlements
+        CODE_SIGN_STYLE: Automatic
+        PRODUCT_NAME: DiskPangPang
+        SWIFT_STRICT_CONCURRENCY: complete
+        ENABLE_APP_SANDBOX: NO
