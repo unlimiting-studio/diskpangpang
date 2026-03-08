@@ -13,8 +13,10 @@
 		1215A5DA1E0F8F2A6FB35490 /* TreemapLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B069B5D7723F380E854ECBE8 /* TreemapLayout.swift */; };
 		18A4D04EBD9E3F2C32570D9F /* CollectorItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBEB2544CBF7C7B2A82AC776 /* CollectorItem.swift */; };
 		304E8BA2A9862EAB0DD916B5 /* TreemapTooltipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2645D62B1CD88C5FFAA18D77 /* TreemapTooltipView.swift */; };
+		35981B521E7AD40F56F51B81 /* LicenseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750EC2F437D8D24B59940B4A /* LicenseService.swift */; };
 		3700CEF8F5DC964419A492A0 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5359698240B4191691E24540 /* AppTheme.swift */; };
 		37D93C70075C064162F78697 /* DiskSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0104C7F32E65A036912F1ABD /* DiskSelectorView.swift */; };
+		47CFFF75F02DC5D48E1AE50C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8D5D219F8710F9BAB08ACCE5 /* Assets.xcassets */; };
 		48D845B82C5C2DA9D58F80EE /* BreadcrumbBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D93C29A217B9CC529C9D83C /* BreadcrumbBar.swift */; };
 		4A1F9E0E7E1EDF97DDDD3CE0 /* TreemapCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C40D25C70DAF4F665439DF1 /* TreemapCanvasView.swift */; };
 		4CFB33F65355D1C92DB67F4F /* TreemapContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED9E9752CA747A66B4EB6282 /* TreemapContainerView.swift */; };
@@ -28,6 +30,7 @@
 		A3CE82A7A792CC091C768C4F /* CollectorPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF6729D7AC791399EB5E19C /* CollectorPanelView.swift */; };
 		B4B5F786328B6B527C3E4CAF /* ScannerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D2B47758821218C0F04625 /* ScannerViewModel.swift */; };
 		C1B99EA596DF04DFD508DDAD /* DeleteConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFBC796CDBA5D3F21BDDA74D /* DeleteConfirmationView.swift */; };
+		D308882B7B9FD5D968BF32DD /* LicenseGateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C206A275DA6BDD42D243A8AB /* LicenseGateView.swift */; };
 		D59E9C08495F7250E5482F9A /* FileCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC9E72B8310982A3E255E00A /* FileCategory.swift */; };
 		EADCEEA4DB3A7A5CDAB95CE2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C546B9BA3F824C152042B7 /* ContentView.swift */; };
 		F867772314B17DBC1D0A8680 /* DiskScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34193531723EA53929F82F9A /* DiskScanner.swift */; };
@@ -45,8 +48,10 @@
 		5B7A3A3830FD86D64D514402 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		5E2B546BFC738A438CBDAB74 /* ScanProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanProgressView.swift; sourceTree = "<group>"; };
 		6A7F6F8E979736B267AEBBF3 /* TreemapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreemapViewModel.swift; sourceTree = "<group>"; };
+		750EC2F437D8D24B59940B4A /* LicenseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseService.swift; sourceTree = "<group>"; };
 		77C62356FC72C4BF3C8EBD0B /* URL+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Extensions.swift"; sourceTree = "<group>"; };
 		7C40D25C70DAF4F665439DF1 /* TreemapCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreemapCanvasView.swift; sourceTree = "<group>"; };
+		8D5D219F8710F9BAB08ACCE5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9AAA7BAAB4883F5EC55A6003 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		A13129F41EE89F3E6CF39683 /* SizeLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeLabel.swift; sourceTree = "<group>"; };
 		A2BA7EC500323093121A53A2 /* DiskPangPang.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DiskPangPang.entitlements; sourceTree = "<group>"; };
@@ -56,6 +61,7 @@
 		B6D2B47758821218C0F04625 /* ScannerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerViewModel.swift; sourceTree = "<group>"; };
 		BFBC796CDBA5D3F21BDDA74D /* DeleteConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteConfirmationView.swift; sourceTree = "<group>"; };
 		C0C546B9BA3F824C152042B7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		C206A275DA6BDD42D243A8AB /* LicenseGateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseGateView.swift; sourceTree = "<group>"; };
 		CC9E72B8310982A3E255E00A /* FileCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileCategory.swift; sourceTree = "<group>"; };
 		EBEB2544CBF7C7B2A82AC776 /* CollectorItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectorItem.swift; sourceTree = "<group>"; };
 		ED9E9752CA747A66B4EB6282 /* TreemapContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreemapContainerView.swift; sourceTree = "<group>"; };
@@ -67,6 +73,7 @@
 		01AEEA2D262C52CE8D059D44 /* DiskPangPang */ = {
 			isa = PBXGroup;
 			children = (
+				8D5D219F8710F9BAB08ACCE5 /* Assets.xcassets */,
 				A2BA7EC500323093121A53A2 /* DiskPangPang.entitlements */,
 				5B7A3A3830FD86D64D514402 /* Info.plist */,
 				EF001DDCBA00EC4FA9EFEE7B /* App */,
@@ -174,6 +181,7 @@
 			children = (
 				14F8097B5D6D2DEA9631CA31 /* DeletionService.swift */,
 				34193531723EA53929F82F9A /* DiskScanner.swift */,
+				750EC2F437D8D24B59940B4A /* LicenseService.swift */,
 				EF2189E1A82A8CBBAF224BE0 /* PermissionService.swift */,
 			);
 			path = Services;
@@ -183,6 +191,7 @@
 			isa = PBXGroup;
 			children = (
 				C0C546B9BA3F824C152042B7 /* ContentView.swift */,
+				C206A275DA6BDD42D243A8AB /* LicenseGateView.swift */,
 				154A45E5D42BE53F481BDFCF /* Collector */,
 				923D4B8BFA5B394445C55DD0 /* Components */,
 				22D705C343F0462B1ED44A58 /* Sidebar */,
@@ -217,6 +226,7 @@
 			buildConfigurationList = 1DAC865623184F6A61D06258 /* Build configuration list for PBXNativeTarget "DiskPangPang" */;
 			buildPhases = (
 				F0C93D563BD908AA5D15C529 /* Sources */,
+				5C4E94DD68127170097AA8C9 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -262,6 +272,17 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		5C4E94DD68127170097AA8C9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				47CFFF75F02DC5D48E1AE50C /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		F0C93D563BD908AA5D15C529 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -281,6 +302,8 @@
 				37D93C70075C064162F78697 /* DiskSelectorView.swift in Sources */,
 				D59E9C08495F7250E5482F9A /* FileCategory.swift in Sources */,
 				9EC4F916F9F02BF7AB7EEF29 /* FileNode.swift in Sources */,
+				D308882B7B9FD5D968BF32DD /* LicenseGateView.swift in Sources */,
+				35981B521E7AD40F56F51B81 /* LicenseService.swift in Sources */,
 				0BF6C53208985E534BB1B17F /* PermissionService.swift in Sources */,
 				635E33ED3153EBEBCA19DFD1 /* ScanProgressView.swift in Sources */,
 				B4B5F786328B6B527C3E4CAF /* ScannerViewModel.swift in Sources */,

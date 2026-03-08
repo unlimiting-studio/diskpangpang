@@ -24,7 +24,6 @@ struct ScanProgressView: View {
                     }
                 }
 
-                // Progress bar
                 if progress.estimatedTotalSize > 0 {
                     GeometryReader { geo in
                         ZStack(alignment: .leading) {
@@ -46,29 +45,6 @@ struct ScanProgressView: View {
                     ProgressView()
                         .controlSize(.small)
                         .tint(AppTheme.accent)
-                }
-
-                Text("\(progress.scannedCount.formatted())개 항목")
-                    .font(AppTheme.monoFont)
-                    .foregroundStyle(AppTheme.textSecondary)
-
-                HStack(spacing: 4) {
-                    Text(progress.scannedSize.formattedSize)
-                        .font(AppTheme.monoFont)
-                        .foregroundStyle(AppTheme.textSecondary)
-                    if progress.estimatedTotalSize > 0 {
-                        Text("/ \(progress.estimatedTotalSize.formattedSize)")
-                            .font(AppTheme.monoFont)
-                            .foregroundStyle(AppTheme.textTertiary)
-                    }
-                }
-
-                if !progress.currentPath.isEmpty {
-                    Text(progress.currentPath)
-                        .font(AppTheme.captionFont)
-                        .foregroundStyle(AppTheme.textTertiary)
-                        .lineLimit(1)
-                        .truncationMode(.middle)
                 }
 
             case .completed:

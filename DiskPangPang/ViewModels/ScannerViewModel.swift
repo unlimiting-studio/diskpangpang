@@ -10,7 +10,7 @@ enum ScanState: Equatable {
     static func == (lhs: ScanState, rhs: ScanState) -> Bool {
         switch (lhs, rhs) {
         case (.idle, .idle), (.completed, .completed): true
-        case (.scanning, .scanning): true
+        case (.scanning(let a), .scanning(let b)): a == b
         case (.error(let a), .error(let b)): a == b
         default: false
         }

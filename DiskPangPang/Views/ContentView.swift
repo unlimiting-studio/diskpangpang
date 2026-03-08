@@ -48,10 +48,11 @@ struct ContentView: View {
     private var sidebar: some View {
         VStack(alignment: .leading, spacing: 0) {
             // App title
-            HStack {
-                Image(systemName: "internaldrive.fill")
-                    .font(.system(size: 18))
-                    .foregroundStyle(AppTheme.accent)
+            HStack(spacing: 10) {
+                Image("AppLogo")
+                    .resizable()
+                    .frame(width: 28, height: 28)
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
                 Text("DiskPangPang")
                     .font(AppTheme.titleFont)
                     .foregroundStyle(AppTheme.textPrimary)
@@ -85,9 +86,11 @@ struct ContentView: View {
         switch appState.scannerVM.state {
         case .idle:
             VStack(spacing: 16) {
-                Image(systemName: "internaldrive")
-                    .font(.system(size: 48))
-                    .foregroundStyle(AppTheme.textTertiary)
+                Image("AppLogo")
+                    .resizable()
+                    .frame(width: 80, height: 80)
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .opacity(0.6)
                 Text("스캔을 시작하세요")
                     .font(AppTheme.headlineFont)
                     .foregroundStyle(AppTheme.textSecondary)
