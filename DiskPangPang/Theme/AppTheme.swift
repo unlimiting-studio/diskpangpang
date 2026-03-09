@@ -20,11 +20,11 @@ enum AppTheme {
     static let borderHover = Color.white.opacity(0.2)
 
     // MARK: - Typography
-    static let titleFont: Font = .system(size: 20, weight: .bold)
-    static let headlineFont: Font = .system(size: 14, weight: .semibold)
-    static let bodyFont: Font = .system(size: 13, weight: .regular)
-    static let captionFont: Font = .system(size: 11, weight: .regular)
-    static let monoFont: Font = .system(size: 12, weight: .regular, design: .monospaced)
+    static let titleFont: Font = .system(size: 22, weight: .bold)
+    static let headlineFont: Font = .system(size: 15, weight: .semibold)
+    static let bodyFont: Font = .system(size: 14, weight: .regular)
+    static let captionFont: Font = .system(size: 13, weight: .regular)
+    static let monoFont: Font = .system(size: 13, weight: .regular, design: .monospaced)
 
     // MARK: - Dimensions
     static let sidebarWidth: CGFloat = 220

@@ -1,6 +1,6 @@
 import SwiftUI
 
-enum FileCategory: String, CaseIterable, Sendable {
+enum FileCategory: String, CaseIterable, Sendable, Codable {
     case documents
     case media
     case code

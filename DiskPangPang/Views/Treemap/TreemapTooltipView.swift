@@ -3,6 +3,11 @@ import SwiftUI
 struct TreemapTooltipView: View {
     let node: FileNode
     let position: CGPoint
+    let containerSize: CGSize
+
+    private let tipWidth: CGFloat = 220
+    private let tipHeight: CGFloat = 90
+    private let gap: CGFloat = 12
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -11,7 +16,7 @@ struct TreemapTooltipView: View {
                 .foregroundStyle(AppTheme.textPrimary)
                 .lineLimit(1)
 
-            HStack(spacing: 8) {
+            HStack(spacing: 6) {
                 let cat = node.isDirectory ? node.dominantCategory : node.category
                 Circle()
                     .fill(cat.color)
@@ -19,24 +24,21 @@ struct TreemapTooltipView: View {
                 Text(cat.label)
                     .font(AppTheme.captionFont)
                     .foregroundStyle(AppTheme.textSecondary)
-            }
 
-            Text(node.totalSize.formattedSize)
-                .font(AppTheme.monoFont)
-                .foregroundStyle(AppTheme.textPrimary)
+                Spacer()
+
+                Text(node.totalSize.formattedSize)
+                    .font(AppTheme.monoFont)
+                    .foregroundStyle(AppTheme.textPrimary)
+            }
 
             if node.isDirectory {
                 Text("\(node.children.count)개 항목")
                     .font(AppTheme.captionFont)
                     .foregroundStyle(AppTheme.textTertiary)
             }
-
-            Text(node.url.path)
-                .font(.system(size: 10))
-                .foregroundStyle(AppTheme.textTertiary)
-                .lineLimit(2)
-                .truncationMode(.middle)
         }
+        .frame(width: tipWidth, alignment: .leading)
         .padding(10)
         .background(AppTheme.surface, in: RoundedRectangle(cornerRadius: 8))
         .overlay(
@@ -44,7 +46,24 @@ struct TreemapTooltipView: View {
                 .stroke(AppTheme.border, lineWidth: 1)
         )
         .shadow(color: .black.opacity(0.3), radius: 8, y: 4)
-        .position(x: position.x + 120, y: position.y - 40)
+        .fixedSize(horizontal: false, vertical: true)
+        .position(x: anchorX, y: anchorY)
         .allowsHitTesting(false)
+    }
+
+    private var anchorX: CGFloat {
+        let rightX = position.x + gap + tipWidth / 2
+        if rightX + tipWidth / 2 + 8 > containerSize.width {
+            return position.x - gap - tipWidth / 2
+        }
+        return rightX
+    }
+
+    private var anchorY: CGFloat {
+        let aboveY = position.y - gap - tipHeight / 2
+        if aboveY - tipHeight / 2 < 0 {
+            return position.y + gap + tipHeight / 2
+        }
+        return aboveY
     }
 }

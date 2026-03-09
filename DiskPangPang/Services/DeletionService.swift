@@ -13,10 +13,10 @@ struct DeletionError: Identifiable, Sendable {
 }
 
 actor DeletionService {
-    private let protectedPrefixes = [
-        "/System", "/usr", "/bin", "/sbin",
-        "/Library/Apple", "/private/var/db",
-        "/cores", "/dev", "/etc", "/tmp", "/var"
+    // 최상위 시스템 경로만 보호 (하위 항목은 삭제 허용)
+    private let protectedExactPaths: Set<String> = [
+        "/", "/System", "/usr", "/bin", "/sbin", "/dev", "/cores",
+        "/Library", "/private", "/etc", "/tmp", "/var"
     ]
 
     func delete(items: [CollectorItem]) -> DeletionResult {
@@ -30,8 +30,8 @@ actor DeletionService {
         for item in sorted {
             let path = item.url.path
 
-            // Safety: block system-protected paths
-            if protectedPrefixes.contains(where: { path == $0 || path.hasPrefix($0 + "/") }) {
+            // Safety: 최상위 시스템 디렉토리 자체의 삭제만 차단
+            if protectedExactPaths.contains(path) {
                 errors.append(DeletionError(url: item.url, message: "시스템 보호 경로입니다"))
                 continue
             }

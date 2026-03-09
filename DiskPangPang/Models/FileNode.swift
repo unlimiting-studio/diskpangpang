@@ -66,22 +66,7 @@ final class FileNode: Identifiable, @unchecked Sendable {
         return components
     }
 
-    private var _dominantCategory: FileCategory?
-
-    var dominantCategory: FileCategory {
-        if !isDirectory { return category }
-        if let cached = _dominantCategory { return cached }
-        guard !children.isEmpty else { return .other }
-
-        var categorySizes: [FileCategory: UInt64] = [:]
-        for child in children {
-            let cat = child.isDirectory ? child.dominantCategory : child.category
-            categorySizes[cat, default: 0] += child.totalSize
-        }
-        let result = categorySizes.max(by: { $0.value < $1.value })?.key ?? .other
-        _dominantCategory = result
-        return result
-    }
+    var dominantCategory: FileCategory = .other
 }
 
 extension FileNode: Hashable {

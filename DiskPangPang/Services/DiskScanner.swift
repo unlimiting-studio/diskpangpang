@@ -115,7 +115,17 @@ final class DiskScanner: Sendable {
 
         group.wait()
 
-        // Rollup sizes
+        // 스캔 완료 → 정리 중 표시
+        let finalCount = scannedCount.withLock { $0 }
+        let finalSize = scannedSize.withLock { $0 }
+        onProgress(ScanProgress(
+            scannedCount: finalCount,
+            currentPath: "크기 계산 중…",
+            scannedSize: finalSize,
+            estimatedTotalSize: estimatedTotalSize
+        ))
+
+        // Rollup sizes + dominantCategory
         rollupSizes(node: root)
         return root
     }
@@ -220,10 +230,14 @@ final class DiskScanner: Sendable {
     private func rollupSizes(node: FileNode) {
         guard node.isDirectory else { return }
         var total: UInt64 = 0
+        var categorySizes: [FileCategory: UInt64] = [:]
         for child in node.children {
             if child.isDirectory { rollupSizes(node: child) }
             total += child.totalSize
+            let cat = child.isDirectory ? child.dominantCategory : child.category
+            categorySizes[cat, default: 0] += child.totalSize
         }
         node.totalSize = total
+        node.dominantCategory = categorySizes.max(by: { $0.value < $1.value })?.key ?? .other
     }
 }

@@ -84,14 +84,17 @@ final class ScannerViewModel {
                 }
             }
 
-            // Cache in background
-            let volumePath = url.path
-            ScanCache.save(root: result, volumePath: volumePath)
-
+            // UI 먼저 업데이트
             DispatchQueue.main.async {
                 guard !Task.isCancelled else { return }
                 weakSelf?.rootNode = result
                 weakSelf?.state = .completed
+            }
+
+            // 캐시는 백그라운드에서 저장
+            let volumePath = url.path
+            DispatchQueue.global(qos: .utility).async {
+                ScanCache.save(root: result, volumePath: volumePath)
             }
         }
     }

@@ -8,7 +8,27 @@ private struct CachedNode: Codable {
     let isHidden: Bool
     let fileSize: UInt64
     let totalSize: UInt64
+    let dominantCategory: FileCategory
     let children: [CachedNode]
+
+    init(name: String, path: String, isDirectory: Bool, isHidden: Bool,
+         fileSize: UInt64, totalSize: UInt64, dominantCategory: FileCategory, children: [CachedNode]) {
+        self.name = name; self.path = path; self.isDirectory = isDirectory
+        self.isHidden = isHidden; self.fileSize = fileSize; self.totalSize = totalSize
+        self.dominantCategory = dominantCategory; self.children = children
+    }
+
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        name = try c.decode(String.self, forKey: .name)
+        path = try c.decode(String.self, forKey: .path)
+        isDirectory = try c.decode(Bool.self, forKey: .isDirectory)
+        isHidden = try c.decode(Bool.self, forKey: .isHidden)
+        fileSize = try c.decode(UInt64.self, forKey: .fileSize)
+        totalSize = try c.decode(UInt64.self, forKey: .totalSize)
+        dominantCategory = (try? c.decode(FileCategory.self, forKey: .dominantCategory)) ?? .other
+        children = try c.decode([CachedNode].self, forKey: .children)
+    }
 }
 
 enum ScanCache {
@@ -53,6 +73,7 @@ enum ScanCache {
             isHidden: node.isHidden,
             fileSize: node.fileSize,
             totalSize: node.totalSize,
+            dominantCategory: node.dominantCategory,
             children: node.children.map { toCache($0) }
         )
     }
@@ -66,6 +87,7 @@ enum ScanCache {
             fileSize: cached.isDirectory ? 0 : cached.fileSize
         )
         node.totalSize = cached.totalSize
+        node.dominantCategory = cached.dominantCategory
         for child in cached.children {
             node.addChild(fromCache(child))
         }
