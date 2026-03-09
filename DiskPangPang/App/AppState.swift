@@ -12,6 +12,9 @@ final class AppState {
 
     init() {
         checkPermissions()
+        collectorVM.onItemsDeleted = { [weak self] urls in
+            self?.treemapVM.removeNodes(urls: urls)
+        }
         scannerVM.loadCache()
         if scannerVM.rootNode != nil {
             onScanCompleted()

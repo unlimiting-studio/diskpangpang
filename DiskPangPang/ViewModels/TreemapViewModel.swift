@@ -58,4 +58,22 @@ final class TreemapViewModel {
     var canGoUp: Bool {
         zoomStack.count > 1
     }
+
+    func removeNodes(urls: [URL]) {
+        let urlSet = Set(urls.map(\.path))
+        guard let root = zoomStack.first else { return }
+        removeNodesRecursive(node: root, urlSet: urlSet)
+        updateDisplayChildren()
+    }
+
+    private func removeNodesRecursive(node: FileNode, urlSet: Set<String>) {
+        let toRemove = node.children.filter { urlSet.contains($0.url.path) }
+        for child in toRemove {
+            child.subtractSizeFromAncestors(child.totalSize)
+            node.removeChild(child)
+        }
+        for child in node.children where child.isDirectory {
+            removeNodesRecursive(node: child, urlSet: urlSet)
+        }
+    }
 }

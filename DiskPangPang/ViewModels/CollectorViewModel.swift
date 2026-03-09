@@ -12,6 +12,9 @@ final class CollectorViewModel {
     var showResult = false
     var isExpanded = true
 
+    /// 삭제 후 트리맵 갱신 콜백
+    var onItemsDeleted: (([URL]) -> Void)?
+
     private let deletionService = DeletionService()
 
     var totalSize: UInt64 {
@@ -77,10 +80,14 @@ final class CollectorViewModel {
             showResult = true
 
             // Remove successfully deleted items
-            let deletedURLs = Set(itemsToDelete.map(\.url))
-                .subtracting(result.errors.map(\.url))
+            let errorURLs = Set(result.errors.map(\.url))
+            let deletedURLs = itemsToDelete.filter { !errorURLs.contains($0.url) }.map(\.url)
             withAnimation {
                 items.removeAll { deletedURLs.contains($0.url) }
+            }
+            // 트리 데이터에서 삭제된 노드 제거
+            if !deletedURLs.isEmpty {
+                onItemsDeleted?(deletedURLs)
             }
         }
     }

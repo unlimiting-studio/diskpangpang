@@ -42,6 +42,20 @@ final class FileNode: Identifiable, @unchecked Sendable {
         children.append(child)
     }
 
+    func removeChild(_ child: FileNode) {
+        children.removeAll { $0.id == child.id }
+        child.parent = nil
+    }
+
+    /// 부모 체인의 totalSize를 감소시킴
+    func subtractSizeFromAncestors(_ size: UInt64) {
+        var current = parent
+        while let p = current {
+            p.totalSize = p.totalSize > size ? p.totalSize - size : 0
+            current = p.parent
+        }
+    }
+
     func sortedChildren() -> [FileNode] {
         children.sorted { $0.totalSize > $1.totalSize }
     }
